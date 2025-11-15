@@ -1,0 +1,11 @@
+{
+  "transcription": " Well, yes, I'm fucking streaming did you see the videos on? Well, yeah, we've been on that.",
+  "toxicity_score": 0.06521739130434782,
+  "flagged_words": [
+    {
+      "word": "fuck",
+      "category": "swearing",
+      "severity": 3
+    }
+  ]
+}
