@@ -1,7 +1,13 @@
 {
-  "transcription": " Oh, this is evil ugly as boyfriend. Huh? No, but it's overriding which is good. I'm good at working with logs if I did it for lightos.",
-  "keyword_score": 0.0,
-  "context_score": 0.0021468382328748703,
-  "toxicity_score": 0.0010734191164374352,
-  "flagged_words": []
+  "transcription": " I'm not going to say I'm fucking the gun. It's coming out of the way. Yeah, that's what. Yeah, fuck it. Let me fuck it. Feel it, you're fucking fat and fat.",
+  "keyword_score": 0.06521739130434782,
+  "context_score": 0.000860037631355226,
+  "toxicity_score": 0.033038714467851525,
+  "flagged_words": [
+    {
+      "word": "fuck",
+      "category": "swearing",
+      "severity": 3
+    }
+  ]
 }
