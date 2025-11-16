@@ -10,8 +10,8 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 TOXIC_KEYWORDS = [
-    "kill yourself", "retard", "trash", "noob", "stupid", "idiot",
-    "dumb", "f***", "b****", "n****", "c****", "kys", "die"
+    "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", "you're stupid","meathead","evil",
+    "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
 ]
 
 class AudioRecorder:
@@ -73,7 +73,10 @@ class ToxiGuardBackend:
         with torch.no_grad():
             outputs = self.nlp_model(**inputs)
             scores = torch.softmax(outputs.logits, dim=1)
-            return scores[0][1].item()  # Probability of toxic
+            real_score=(scores[0][1].item()*100)**0.2
+            if real_score>1:
+                real_score=1
+            return  real_score # Probability of toxic
 
     def transcribe_and_score(self, data, text):
         transcription_path = os.path.join(self.recorder.output_dir, "transcription.txt")
@@ -82,8 +85,20 @@ class ToxiGuardBackend:
         with open(transcription_path, "w") as f:
             f.write(text)
 
-        found_keywords = self.check_toxicity(text)
-        keyword_score = len(found_keywords) / len(TOXIC_KEYWORDS)
+        found_keywords = []
+        keyword_score = 0
+        text_lower = text.lower()
+        for word in TOXIC_KEYWORDS:
+            word_lower = word.lower()
+            if word_lower in text_lower:
+                multiplier = 5
+                if "you " + word_lower in text_lower or "you are a " + word_lower in text_lower:
+                    multiplier = 10
+                keyword_score += multiplier
+                found_keywords.append(word)
+        keyword_score = (keyword_score*5/len(text_lower))**0.3
+        if keyword_score>1:
+            keyword_score=1
         context_score = self.context_toxicity_score(text)
         final_score = 0.5 * keyword_score + 0.5 * context_score
 
@@ -95,8 +110,25 @@ class ToxiGuardBackend:
             "flagged_words": found_keywords
         }
 
+        # Load existing reports
+        try:
+            with open(report_path, "r") as f:
+                reports = json.load(f)
+                if not isinstance(reports, list):
+                    reports = []
+        except (FileNotFoundError, json.JSONDecodeError):
+            reports = []
+
+        # Append new report
+        reports.append(report)
+
+        # Clear if 10 entries
+        if len(reports) >= 4:
+            reports = []
+
+        # Save reports list
         with open(report_path, "w") as f:
-            json.dump(report, f, indent=2)
+            json.dump(reports, f, indent=2)
 
         print(f"[ToxiGuard] Transcription saved to: {transcription_path}")
         print(f"[ToxiGuard] Toxicity report saved to: {report_path}")
