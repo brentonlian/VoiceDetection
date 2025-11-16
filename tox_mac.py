@@ -10,8 +10,12 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 TOXIC_KEYWORDS = [
-    "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", "you're stupid","meathead","evil",
+    "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", "you're stupid","meathead","evil","quit",
     "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
+]
+
+TOXIC_PHRASES = [
+    "kill yourself","commit suicide","you should die", "you should end it all", "You were an accident","Make me a sandwich","Go back to the kitchen","waste of oxygen", "You're a bot"
 ]
 
 class AudioRecorder:
@@ -66,17 +70,17 @@ class ToxiGuardBackend:
         return result['text']
 
     def check_toxicity(self, text):
-        return [word for word in TOXIC_KEYWORDS if word.lower() in text.lower()]
+        return [word for word in TOXIC_PHRASES if word.lower() in text.lower()],[word for word in TOXIC_KEYWORDS if word.lower() in text.lower()]
 
     def context_toxicity_score(self, text):
         inputs = self.nlp_tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
         with torch.no_grad():
             outputs = self.nlp_model(**inputs)
             scores = torch.softmax(outputs.logits, dim=1)
-            real_score=(scores[0][1].item()*100)**0.2
-            if real_score>1:
-                real_score=1
-            return  real_score # Probability of toxic
+            subtracting_score=(scores[0][1].item()*100)**0.3
+            if subtracting_score>1:
+                subtracting_score=1
+            return  1-subtracting_score # Probability of toxic
 
     def transcribe_and_score(self, data, text):
         transcription_path = os.path.join(self.recorder.output_dir, "transcription.txt")
@@ -87,16 +91,27 @@ class ToxiGuardBackend:
 
         found_keywords = []
         keyword_score = 0
-        text_lower = text.lower()
+        text_lower = text.lower().replace(".", "")
         for word in TOXIC_KEYWORDS:
             word_lower = word.lower()
             if word_lower in text_lower:
-                multiplier = 5
-                if "you " + word_lower in text_lower or "you are a " + word_lower in text_lower:
+                mult2=text_lower.count(word_lower)
+                multiplier = 2
+                if "you " + word_lower in text_lower or "you are a " + word_lower or "you're a " + word_lower or "you're such a " + word_lower in text_lower:
                     multiplier = 10
                 keyword_score += multiplier
                 found_keywords.append(word)
-        keyword_score = (keyword_score*5/len(text_lower))**0.3
+        for word in TOXIC_PHRASES:
+            word_lower = word.lower()
+            if word_lower in text_lower:
+                mult2=text_lower.count(word_lower)
+                multiplier = 10
+                multiplier=multiplier*mult2
+                keyword_score += multiplier
+                found_keywords.append(word) 
+        x=len(text_lower)
+        x=x if x<100 else 100   
+        keyword_score = (keyword_score*4/x)
         if keyword_score>1:
             keyword_score=1
         context_score = self.context_toxicity_score(text)
@@ -118,13 +133,13 @@ class ToxiGuardBackend:
                     reports = []
         except (FileNotFoundError, json.JSONDecodeError):
             reports = []
+        if len(reports) >= 4:
+            reports = []
 
         # Append new report
         reports.append(report)
 
         # Clear if 10 entries
-        if len(reports) >= 4:
-            reports = []
 
         # Save reports list
         with open(report_path, "w") as f:
