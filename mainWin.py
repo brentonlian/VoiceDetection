@@ -1,11 +1,10 @@
-import numpy as np
-import wave
 import os
-import sys
-import subprocess
-import time
-import whisper
 import json
+import time
+import subprocess
+import whisper
+import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 KEYWORDS_FILE = "keywords.json"
 
@@ -17,6 +16,7 @@ class AudioRecorder:
 
     def record_system_audio(self, duration_seconds=15, filename="_temp.wav"):
         filepath = os.path.join(self.output_dir, filename)
+        # Example Windows microphone input using ffmpeg
         command = [
             "ffmpeg",
             "-y",
@@ -30,10 +30,18 @@ class AudioRecorder:
 
 class ToxiGuardBackend:
     def __init__(self):
+        # Audio recording
         self.recorder = AudioRecorder()
-        self.model = whisper.load_model("base")
+        # Whisper STT model
+        self.stt_model = whisper.load_model("base")
+        # Load keyword-based toxicity rules
         self.toxic_keywords = self.load_keywords()
-        self.severity_threshold = 1  # default severity tolerance level
+        self.severity_threshold = 1  # Minimum severity to flag
+
+        # Context-aware NLP model (BERT-based)
+        self.nlp_tokenizer = AutoTokenizer.from_pretrained("unitary/toxic-bert")
+        self.nlp_model = AutoModelForSequenceClassification.from_pretrained("unitary/toxic-bert")
+        self.nlp_model.eval()
 
     def load_keywords(self):
         if os.path.exists(KEYWORDS_FILE):
@@ -50,7 +58,7 @@ class ToxiGuardBackend:
 
     def transcribe_audio(self, filepath):
         print("[ToxiGuard] Transcribing audio...")
-        result = self.model.transcribe(filepath)
+        result = self.stt_model.transcribe(filepath)
         print(f"[ToxiGuard] Transcription result: {result['text']}")
         return result['text']
 
@@ -67,24 +75,45 @@ class ToxiGuardBackend:
                         })
         return flagged
 
+    def context_toxicity_score(self, text):
+        """Return context-aware toxicity score using transformer model."""
+        inputs = self.nlp_tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+        with torch.no_grad():
+            outputs = self.nlp_model(**inputs)
+            scores = torch.softmax(outputs.logits, dim=1)
+            # label 1 = toxic, label 0 = non-toxic
+            toxicity_prob = scores[0][1].item()
+        return toxicity_prob
+
     def transcribe_and_score(self, transcription, filepath):
         transcription_path = os.path.join(self.recorder.output_dir, "transcription.txt")
         report_path = os.path.join(self.recorder.output_dir, "toxicity_report.json")
 
+        # Save transcription
         with open(transcription_path, "w") as f:
             f.write(transcription)
 
+        # Keyword-based detection
         found_keywords = self.check_toxicity(transcription)
         if found_keywords:
             total_severity = sum(word["severity"] for word in found_keywords)
             max_possible = sum(data["severity"] * len(data["words"]) for data in self.toxic_keywords.values())
-            score = total_severity / max_possible
+            keyword_score = total_severity / max_possible
         else:
-            score = 0.0
+            keyword_score = 0.0
 
+        # Context-aware toxicity score
+        context_score = self.context_toxicity_score(transcription)
+
+        # Combined score (adjust weights as needed)
+        final_score = 0.5 * keyword_score + 0.5 * context_score
+
+        # Save report
         report = {
             "transcription": transcription,
-            "toxicity_score": score,
+            "keyword_score": keyword_score,
+            "context_score": context_score,
+            "toxicity_score": final_score,
             "flagged_words": found_keywords
         }
         with open(report_path, "w") as f:
@@ -95,17 +124,16 @@ class ToxiGuardBackend:
 
     def run_monitor_loop(self, interval=5):
         print("[ToxiGuard] Starting background monitoring...")
-        print(f"[ToxiGuard] Current Working Directory: {os.getcwd()}")
         while True:
             print("[ToxiGuard] Listening...")
             filepath = self.recorder.record_system_audio()
             transcription = self.transcribe_audio(filepath)
-            print(f"[ToxiGuard] Transcribed Text: {transcription}")
             found = self.check_toxicity(transcription)
-            print(f"[ToxiGuard] Found toxic words: {found}")
-            if found:
-                print("[ToxiGuard] Toxic behavior detected! Saving clip and report...")
-                self.transcribe_and_score(transcription, filepath)
+            print(f"[ToxiGuard] Found toxic keywords: {found}")
+
+            # Always run context-aware scoring
+            self.transcribe_and_score(transcription, filepath)
+
             print("[ToxiGuard] Loop complete. Waiting for next check...")
             time.sleep(interval)
 
