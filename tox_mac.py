@@ -77,7 +77,7 @@ class ToxiGuardBackend:
         with torch.no_grad():
             outputs = self.nlp_model(**inputs)
             scores = torch.softmax(outputs.logits, dim=1)
-            subtracting_score=(scores[0][1].item()*100)**0.3
+            subtracting_score=(scores[0][1].item()*100)**0.7
             if subtracting_score>1:
                 subtracting_score=1
             return  1-subtracting_score # Probability of toxic
@@ -97,8 +97,8 @@ class ToxiGuardBackend:
             if word_lower in text_lower:
                 mult2=text_lower.count(word_lower)
                 multiplier = 2
-                if "you " + word_lower in text_lower or "you are a " + word_lower or "you're a " + word_lower or "you're such a " + word_lower in text_lower:
-                    multiplier = 10
+                if "you " + word_lower in text_lower or "you are a " + word_lower or "you're a " or "you're so " + word_lower or "you're such a " + word_lower in text_lower:
+                    multiplier = 15
                 keyword_score += multiplier
                 found_keywords.append(word)
         for word in TOXIC_PHRASES:
@@ -109,9 +109,9 @@ class ToxiGuardBackend:
                 multiplier=multiplier*mult2
                 keyword_score += multiplier
                 found_keywords.append(word) 
-        x=len(text_lower)
-        x=x if x<100 else 100   
-        keyword_score = (keyword_score*4/x)
+        x=len(text_lower) if len(text_lower)>0 else 1
+        x=x if x<200 else 200   
+        keyword_score = (keyword_score*2/x)**1
         if keyword_score>1:
             keyword_score=1
         context_score = self.context_toxicity_score(text)
@@ -133,13 +133,15 @@ class ToxiGuardBackend:
                     reports = []
         except (FileNotFoundError, json.JSONDecodeError):
             reports = []
+
+        # Clear if 4 entries
         if len(reports) >= 4:
             reports = []
 
         # Append new report
         reports.append(report)
 
-        # Clear if 10 entries
+
 
         # Save reports list
         with open(report_path, "w") as f:
