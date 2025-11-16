@@ -1,13 +1,16 @@
-{
-  "transcription": " I'm not going to say I'm fucking the gun. It's coming out of the way. Yeah, that's what. Yeah, fuck it. Let me fuck it. Feel it, you're fucking fat and fat.",
-  "keyword_score": 0.06521739130434782,
-  "context_score": 0.000860037631355226,
-  "toxicity_score": 0.033038714467851525,
-  "flagged_words": [
-    {
-      "word": "fuck",
-      "category": "swearing",
-      "severity": 3
-    }
-  ]
-}
+[
+  {
+    "transcription": "",
+    "keyword_score": 0.0,
+    "context_score": 0,
+    "toxicity_score": 0.0,
+    "flagged_words": []
+  },
+  {
+    "transcription": " 1.5% 1.5% 2.5% 2.5% 2.5% 3.5% 4.5%",
+    "keyword_score": 0.0,
+    "context_score": 0,
+    "toxicity_score": 0.0,
+    "flagged_words": []
+  }
+]

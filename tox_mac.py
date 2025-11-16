@@ -11,7 +11,13 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 TOXIC_KEYWORDS = [
     "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", "you're stupid","meathead","evil","quit",
-    "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
+    "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", 
+    "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", 
+    "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", 
+    "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", 
+    "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", 
+    "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", 
+    "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
 ]
 
 TOXIC_PHRASES = [
@@ -19,14 +25,14 @@ TOXIC_PHRASES = [
 ]
 
 class AudioRecorder:
-    def __init__(self, sample_rate=44100, buffer_seconds=15):
+    def __init__(self, sample_rate=44100, buffer_seconds=15) -> None:
         self.sample_rate = sample_rate
         self.buffer_seconds = buffer_seconds
         self.speaker = sc.get_microphone(sc.default_microphone().name)
         self.output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ToxiGuard_Output')
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def start_recording(self):
+    def start_recording(self) -> None:
         print(f"[ToxiGuard] Monitoring system audio via: {self.speaker.name}")
         print(f"[ToxiGuard] Output files will be saved to: {self.output_dir}")
 
@@ -80,7 +86,7 @@ class ToxiGuardBackend:
             subtracting_score=(scores[0][1].item()*100)**0.7
             if subtracting_score>1:
                 subtracting_score=1
-            return  1-subtracting_score # Probability of toxic
+            return  1 - subtracting_score # Probability of toxic
 
     def transcribe_and_score(self, data, text):
         transcription_path = os.path.join(self.recorder.output_dir, "transcription.txt")
@@ -92,6 +98,7 @@ class ToxiGuardBackend:
         found_keywords = []
         keyword_score = 0
         text_lower = text.lower().replace(".", "")
+        
         for word in TOXIC_KEYWORDS:
             word_lower = word.lower()
             if word_lower in text_lower:
@@ -101,6 +108,7 @@ class ToxiGuardBackend:
                     multiplier = 15
                 keyword_score += multiplier
                 found_keywords.append(word)
+                
         for word in TOXIC_PHRASES:
             word_lower = word.lower()
             if word_lower in text_lower:
@@ -142,7 +150,6 @@ class ToxiGuardBackend:
         reports.append(report)
 
 
-
         # Save reports list
         with open(report_path, "w") as f:
             json.dump(reports, f, indent=2)
@@ -165,5 +172,6 @@ class ToxiGuardBackend:
             time.sleep(interval)
 
 if __name__ == '__main__':
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     app = ToxiGuardBackend()
     app.run_monitor_loop()
