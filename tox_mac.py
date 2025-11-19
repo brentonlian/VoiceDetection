@@ -10,18 +10,22 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 TOXIC_KEYWORDS = [
-    "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", "you're stupid","meathead","evil","quit",
+    "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", 
+    "you're stupid","meathead","evil","quit",
     "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", 
     "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", 
     "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", 
     "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", 
     "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", 
-    "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", 
+    "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", 
+    "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", 
     "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
 ]
 
 TOXIC_PHRASES = [
-    "kill yourself","commit suicide","you should die", "you should end it all", "You were an accident","Make me a sandwich","Go back to the kitchen","waste of oxygen", "You're a bot"
+    "kill yourself","commit suicide","you should die", 
+    "you should end it all", "You were an accident","Make me a sandwich",
+    "Go back to the kitchen","waste of oxygen", "You're a bot"
 ]
 
 class AudioRecorder:
