@@ -13,13 +13,17 @@ TOXIC_KEYWORDS = [
     "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", 
     "you're stupid","meathead","evil","quit",
     "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", 
-    "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", "asshole", "jerk", "bastard", 
-    "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", 
-    "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", 
-    "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", 
+    "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", 
+    "asshole", "jerk", "bastard", "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", 
+    "dirtbag", "lowlife", "scum", "snake", "weasel", "rat", "pig", "sleazebag", "cunt", "bitch", 
+    "coward", "liar", "hypocrite", "narcissist", "psycho", "sociopath", "ugly", "hideous", "fatso", "lardass", "pig", "cow", 
+    "whale", "skeleton", "scrawny", "skinny bitch", "disgusting", "slob", 
+    "skank", "trashy", "freak", "mutant", "shit", "fuck", "fuckwit", "shitstain", "cumstain", "piss-ant", "dickweed", 
+    "asswipe", "fuckface", "shit-for-brains", "tool", "simp", "incel", "cuck", "Karen", 
     "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", 
     "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", 
-    "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", "bimbo", "retard", "cripple"
+    "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", 
+    "bimbo", "retarded", "cripple", "nepali", "baljeet", "mamdami", "disabled", "gooner", "goon", "duke", "dookie", "bully", "bum", "not-nice", "cluely", "harris-teeter", "zonner", "chopped"
 ]
 
 TOXIC_PHRASES = [

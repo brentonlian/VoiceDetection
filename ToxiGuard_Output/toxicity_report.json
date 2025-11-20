@@ -1,23 +1,24 @@
 [
   {
-    "transcription": " You wrote, I knew I was here wrong. You did? You did? Okay. It's all you. Thank you very much. Thank you. We're just great changes.",
-    "keyword_score": 0.0,
-    "context_score": 0,
-    "toxicity_score": 0.0,
-    "flagged_words": []
+    "transcription": " I got this. Let me tell you. Oh, you guys see this. What face is this? It was one word, but you guys say it as... Oh! That's the clue. Who coded this fuck face? You did it. Mambami. Bulji. Mami. Mami. Hey, take my gun. Yeah. Back of it, it's my...",
+    "keyword_score": 0.15,
+    "context_score": 0.8263973698050837,
+    "toxicity_score": 0.48819868490254187,
+    "flagged_words": [
+      "fuck"
+    ]
   },
   {
-    "transcription": " \ub098\uc774\ub294 19\uc0b4\uc774\uace0 \ub300\ud559\uad50 2\ud559\ub144\uc785\ub2c8\ub2e4 \uc81c \uc804\uacf5\uc740",
-    "keyword_score": 0.0,
-    "context_score": 0,
-    "toxicity_score": 0.0,
-    "flagged_words": []
-  },
-  {
-    "transcription": " I can recognize those things. Zhaoshanghou. Zhaoshanghou. Wonyao. Wonyao. Wonyao. Wonyao. Wonyao. I asked I wrote my case. She'll be right back. As Honoro.",
-    "keyword_score": 0.0,
-    "context_score": 0,
-    "toxicity_score": 0.0,
-    "flagged_words": []
+    "transcription": " actually you're such a retard you're so trash bro you need to quit playing this game new you're such a new bro you're so bad at robots bro you're such a dumbass bro you're such a",
+    "keyword_score": 0.8379888268156425,
+    "context_score": 0.881266864429327,
+    "toxicity_score": 0.8596278456224847,
+    "flagged_words": [
+      "retard",
+      "trash",
+      "quit",
+      "dumb",
+      "dumbass"
+    ]
   }
 ]
