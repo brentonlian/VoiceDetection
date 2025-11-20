@@ -1,3 +1,4 @@
+<img width="2560" height="1929" alt="image" src="https://github.com/user-attachments/assets/b571ec54-1711-4b27-b263-f16323db9930" />
 
 # ToxiGuard - Toxic Voice Communication Monitor
 
