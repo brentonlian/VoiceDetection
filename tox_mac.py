@@ -11,7 +11,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 TOXIC_KEYWORDS = [
     "kill yourself", "retard", "trash", "noob", "stupid", "idiot", "I hate you", "loser", 
-    "you're stupid","meathead","evil","quit",
+    "you're stupid","meathead","evil","quit", "ngmi", "processless", "no processes", "unemployed", "job", "j*b",
     "dumb", "f***", "b****", "n****", "c****", "kys", "die" "idiot", "moron", "imbecile", "dumbass", "dipshit", "dunce", "simpleton", "fool", 
     "halfwit", "nitwit", "dullard", "ignoramus", "bonehead", "knucklehead", "blockhead", "pea-brain", "fucking idiot", "waste of space", "useless", 
     "asshole", "jerk", "bastard", "son of a bitch", "dick", "prick", "douchebag", "scumbag", "shithead", "motherfucker", 
@@ -23,7 +23,7 @@ TOXIC_KEYWORDS = [
     "neckbeard", "thot", "basic", "clown", "bozo", "nonce", "annoying", "insufferable", "pathetic", 
     "worthless", "incompetent", "lazy", "good-for-nothing", "two-faced", "backstabbing", "manipulative", "clingy", 
     "needy", "desperate", "cringey", "cringe", "try-hard", "wannabe", "poser", "nr", "ft", "kke", "spc", "ch*nk", "whore", "slut", "slag", 
-    "bimbo", "retarded", "cripple", "nepali", "baljeet", "mamdami", "disabled", "gooner", "goon", "duke", "dookie", "bully", "bum", "not-nice", "cluely", "harris-teeter", "zonner", "chopped"
+    "bimbo", "retarded", "cripple", "baljeet", "disabled", "gooner", "goon", "duke", "dookie", "bully", "bum", "not-nice", "cluely", "harris-teeter", "zonner", "chopped"
 ]
 
 TOXIC_PHRASES = [

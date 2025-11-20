@@ -1,24 +1,23 @@
 [
   {
-    "transcription": " I got this. Let me tell you. Oh, you guys see this. What face is this? It was one word, but you guys say it as... Oh! That's the clue. Who coded this fuck face? You did it. Mambami. Bulji. Mami. Mami. Hey, take my gun. Yeah. Back of it, it's my...",
-    "keyword_score": 0.15,
-    "context_score": 0.8263973698050837,
-    "toxicity_score": 0.48819868490254187,
+    "transcription": " How do you get your game console? Is it working? Great. Bro, you are so unemployed. You don't have a job. You have no processes. You're a process list. You're NGMI. Bro, you chop, bro.",
+    "keyword_score": 0.6741573033707865,
+    "context_score": 0.8953021990500175,
+    "toxicity_score": 0.784729751210402,
     "flagged_words": [
-      "fuck"
+      "ngmi",
+      "no processes",
+      "unemployed",
+      "job"
     ]
   },
   {
-    "transcription": " actually you're such a retard you're so trash bro you need to quit playing this game new you're such a new bro you're so bad at robots bro you're such a dumbass bro you're such a",
-    "keyword_score": 0.8379888268156425,
-    "context_score": 0.881266864429327,
-    "toxicity_score": 0.8596278456224847,
+    "transcription": " I know processes are an imploded job. Oh, this is actually a good, kind of good. No, this is like San Francisco. Wait, we should do this instead of thing actual. Let's try it. Like, during the community. Well, I tried, bro. What do you got to commit denied?",
+    "keyword_score": 0.15,
+    "context_score": 0,
+    "toxicity_score": 0.075,
     "flagged_words": [
-      "retard",
-      "trash",
-      "quit",
-      "dumb",
-      "dumbass"
+      "job"
     ]
   }
 ]
